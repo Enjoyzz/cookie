@@ -9,6 +9,7 @@
     }
   ],
   "require": {
+    "php": "^7.4 | ^8.0",
     "enjoys/http": "^1.0"
   },
   "autoload": {
