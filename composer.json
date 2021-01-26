@@ -1,0 +1,24 @@
+{
+  "name": "enjoys/cookie",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Enjoys",
+      "email": "deadly.info@gmail.com"
+    }
+  ],
+  "require": {
+    "enjoys/http": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Enjoys\\Cookie\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Enjoys\\Cookie\\": "tests"
+    }
+  }
+}
