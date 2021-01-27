@@ -36,8 +36,15 @@ class Cookie
 
     public static function get(string $key): ?string
     {
-        return (isset($_COOKIE[$key])) ? $_COOKIE[$key] : null;
+        return (self::has($key)) ? $_COOKIE[$key] : null;
     }
+
+
+    public static function has(string $key): bool
+    {
+        return array_key_exists($key, $_COOKIE);
+    }
+
 
     /**
      * @param string $name

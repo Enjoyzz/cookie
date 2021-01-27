@@ -14,6 +14,6 @@ $cookie->set('token', time(), 'session');
 $cookie->set('token2', time()+500000000, 3600, [
 'samesite' => 'strict'
 ]);
-$cookie->set('token3', time(), 'session');
+var_dump(Cookie::has('token4'));
 //var_dump($cookie);
 //var_dump($_COOKIE);
