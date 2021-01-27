@@ -60,10 +60,11 @@ class Cookie
      * @param string $key
      * @param string|null $value
      * @param bool|int|string $ttl
-     * @param array<mixed> $options
+     * @param array<mixed> $options Ассоциативный массив (array), который может иметь любой из ключей: expires, path, domain, secure, httponly и samesite.
+     * @param bool $raw Отправляет cookie без URL-кодирования значения
      * @throws Exception
      */
-    public function set(string $key, ?string $value, $ttl = true, array $options = []): void
+    public function set(string $key, ?string $value, $ttl = true, array $options = [], $raw = false): void
     {
         if (headers_sent($filename, $linenum)) {
             throw new Exception(
@@ -82,6 +83,10 @@ class Cookie
 
         $this->setExpires($ttl);
 
+        if($raw === true){
+            setrawcookie($key, (string)$value, $this->mergeOptions($options));
+            return;
+        }
         setcookie($key, (string)$value, $this->mergeOptions($options));
     }
 
