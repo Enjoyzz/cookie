@@ -18,7 +18,7 @@ class Expires
      */
     public function __construct($ttl)
     {
-        $this->expires = $this->convertToInt($ttl);
+        $this->expires = $this->normalize($ttl);
     }
 
     /**
@@ -27,7 +27,7 @@ class Expires
      * @throws Exception
      * @see http://php.net/manual/ru/datetime.formats.relative.php
      */
-    private function convertToInt($ttl): int
+    private function normalize($ttl): int
     {
         //Срок действия cookie истечет с окончанием сессии (при закрытии браузера).
         if ($ttl === 0 || $ttl === false || strtolower((string)$ttl) === 'session') {
