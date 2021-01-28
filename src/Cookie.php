@@ -9,29 +9,14 @@ use Enjoys\Http\ServerRequestInterface;
 
 class Cookie
 {
-
     /**
-     * @var array<mixed>
+     * @var Options
      */
-    private array $options = [
-        'expires' => 0,
-        'path' => '',
-        'domain' => false,
-        'secure' => false,
-        'httponly' => false,
-        'samesite' => 'Lax',
+    private Options $options;
 
-    ];
-
-    /**
-     * @var ServerRequestInterface
-     */
-    private ServerRequestInterface $serverRequest;
-
-    public function __construct(ServerRequestInterface $serverRequest = null)
+    public function __construct(Options $options)
     {
-        $this->serverRequest = $serverRequest ?? new ServerRequest();
-        $this->setDomain();
+        $this->options = $options;
     }
 
     public static function get(string $key): ?string
@@ -60,137 +45,92 @@ class Cookie
      * @param string $key
      * @param string|null $value
      * @param bool|int|string $ttl
-     * @param array<mixed> $options Ассоциативный массив (array), который может иметь любой из ключей: expires, path, domain, secure, httponly и samesite.
-     * @param bool $raw Отправляет cookie без URL-кодирования значения
+     * @param array<mixed> $addedOptions Ассоциативный массив (array), который может иметь любой из ключей: expires, path, domain, secure, httponly и samesite.
+     * @throws Exception
+     * @see https://www.php.net/manual/ru/function.setcookie.php
+     */
+    public function set(string $key, ?string $value, $ttl = true, array $addedOptions = []): void
+    {
+        $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
+        setcookie(...$setParams);
+    }
+
+    /**
+     * Отправляет cookie без URL-кодирования значения
+     * @param string $key
+     * @param string|null $value
+     * @param bool|int|string $ttl
+     * @param array<mixed> $addedOptions
+     * @throws Exception
+     * @see https://www.php.net/manual/ru/function.setrawcookie.php
+     */
+    public function setRaw(string $key, ?string $value, $ttl = true, array $addedOptions = []): void
+    {
+        $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
+        setrawcookie(...$setParams);
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $value
+     * @param bool|int|string $ttl
+     * @param array<mixed> $addedOptions
+     * @return array<mixed>
      * @throws Exception
      */
-    public function set(string $key, ?string $value, $ttl = true, array $options = [], $raw = false): void
+    private function getSetParams(string $key, ?string $value, $ttl = true, array $addedOptions = []): array
     {
         if (headers_sent($filename, $linenum)) {
             throw new Exception(
                 sprintf(
-                    "Куки не установлены\nЗаголовки уже были отправлены в %s в строке %s\n",
+                    "Cookies are not set. Headers have already been sent to %s in line %s\n",
                     $filename,
                     $linenum
                 )
             );
         }
 
-        //Если $value равно NULL, то удаляем эту куку
-        if ($value === null) {
-            $ttl = '-1 day';
+        if ($value !== null) {
+            $expires = $this->getExpires($ttl);
+            $this->options->setExpires($expires);
         }
 
-        $this->setExpires($ttl);
-
-        if($raw === true){
-            setrawcookie($key, (string)$value, $this->mergeOptions($options));
-            return;
-        }
-        setcookie($key, (string)$value, $this->mergeOptions($options));
-    }
-
-    /**
-     * @param array<mixed> $options
-     * @return array<mixed>
-     */
-    private function mergeOptions(array $options): array
-    {
-        $mergedOptions = $this->options;
-        foreach ($options as $key => $option) {
-            if (isset($this->options[$key])) {
-                $mergedOptions[$key] = $option;
-            }
-        }
-
-        return $mergedOptions;
+        return [
+            $key,
+            (string)$value,
+            $this->options->getOptions($addedOptions),
+        ];
     }
 
     /**
      * @param mixed $ttl
-     * @return void
+     * @return int
      * @throws Exception
      * @see http://php.net/manual/ru/datetime.formats.relative.php
      */
-    private function setExpires($ttl): void
+    private function getExpires($ttl): int
     {
         //Срок действия cookie истечет с окончанием сессии (при закрытии браузера).
-        if ($ttl === false || strtolower((string)$ttl) === 'session') {
-            $this->options['expires'] = 0;
-            return;
+        if ($ttl === 0 || $ttl === false || strtolower((string)$ttl) === 'session') {
+            return 0;
         }
 
+        // Устанавливаем время жизни на год
+        if ($ttl === true) {
+            $ttl = 60 * 60 * 24 * 365;
+        }
 
         // Если число то прибавляем значение к метке времени timestamp
         // Для установки сессионной куки надо использовать FALSE
         if (is_numeric($ttl)) {
-            $this->options['expires'] = time() + (int)$ttl;
-            return;
-        }
-
-
-        // Устанавливаем время жизни на год
-        if ($ttl === true) {
-            $ttl = '+1 year';
+            return time() + (int)$ttl;
         }
 
         if (is_string($ttl)) {
             if (false !== $returnTtl = strtotime($ttl)) {
-                $this->options['expires'] = $returnTtl;
-                return;
+                return $returnTtl;
             }
             throw new Exception(sprintf('strtotime() failed to convert string "%s" to timestamp', $ttl));
         }
-//        $this->options['expires'] = (int)$ttl;
-    }
-
-
-    /**
-     * @param false|string $domain
-     */
-    public function setDomain($domain = false): void
-    {
-        if ($domain === false) {
-            if ($this->serverRequest->server('SERVER_NAME') != 'localhost') {
-                $domain = (preg_replace(
-                    '#^www\.#',
-                    '',
-                    strtolower((string)$this->serverRequest->server('SERVER_NAME'))
-                ));
-            }
-        }
-
-        $this->options['domain'] = $domain ?? false;
-        $this->options['secure'] = ($this->serverRequest->server('HTTPS') == 'on');
-    }
-
-
-    public function setPath(string $path): void
-    {
-        $this->options['path'] = $path;
-    }
-
-    /**
-     * @param bool $httpOnly
-     */
-    public function setHttponly(bool $httpOnly): void
-    {
-        $this->options['httponly'] = $httpOnly;
-    }
-
-    /**
-     * @param bool $secure
-     */
-    public function setSecure(bool $secure): void
-    {
-        $this->options['secure'] = $secure;
-    }
-
-    /**
-     * @param string $sameSite
-     */
-    public function setSameSite(string $sameSite): void
-    {
-        $this->options['samesite'] = $sameSite;
     }
 }
