@@ -4,15 +4,19 @@
 
 ```php
 use Enjoys\Cookie\Cookie;
+use Enjoys\Cookie\Options;
 
-$cookie = new Cookie();
-$cookie->setDomain('example.com'); //default: false (localhost)
-$cookie->setPath('/'); //default: '' (string empty)
-$cookie->setSecure(true); //default: false
-$cookie->setHttponly(true); //default: false
-$cookie->setSameSite('Strict'); //default: Lax
+$cookieOptions = new Options();
+$cookieOptions->setDomain('example.com'); //default: false (localhost)
+$cookieOptions->setPath('/'); //default: '' (string empty)
+$cookieOptions->setSecure(true); //default: false
+$cookieOptions->setHttponly(true); //default: false
+$cookieOptions->setSameSite('Strict'); //default: Lax
 
-$cookie->set('key', 'value', $ttl = 0, $options = []);
+$cookie = new Cookie($cookieOptions);
+
+$cookie->set('key', 'value<>', $ttl = true, $options = []);
+$cookie->setRaw('key', 'value<>');
 $cookie->delete('key');
 Cookie::get('key');
 ```
