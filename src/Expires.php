@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Enjoys\Cookie;
 
@@ -10,15 +10,19 @@ class Expires
      * @var int
      */
     private int $expires = -1;
+    private ?int $currentTimestamp;
 
     /**
      * Expires constructor.
      * @param mixed $ttl
+     * @param int|null $currentTimestamp
      * @throws Exception
      */
-    public function __construct($ttl)
+    public function __construct($ttl, int $currentTimestamp = null)
     {
+        $this->currentTimestamp = $currentTimestamp ?? time();
         $this->setExpires($ttl);
+
     }
 
     /**
@@ -43,12 +47,12 @@ class Expires
         // Если число то прибавляем значение к метке времени timestamp
         // Для установки сессионной куки надо использовать FALSE
         if (is_numeric($ttl)) {
-            $this->expires =  time() + (int)$ttl;
+            $this->expires =  $this->currentTimestamp + (int)$ttl;
             return;
         }
 
         if (is_string($ttl)) {
-            if (false !== $returnTtl = strtotime($ttl)) {
+            if (false !== $returnTtl = strtotime($ttl, $this->currentTimestamp)) {
                 $this->expires =  $returnTtl;
                 return;
             }
