@@ -13,25 +13,26 @@ class Expires
 
     /**
      * Expires constructor.
-     * @param int|string|bool $ttl
+     * @param mixed $ttl
      * @throws Exception
      */
     public function __construct($ttl)
     {
-        $this->expires = $this->normalize($ttl);
+        $this->setExpires($ttl);
     }
 
     /**
-     * @param int|string|bool $ttl
-     * @return int
+     * @param mixed $ttl
+     * @return void
      * @throws Exception
      * @see http://php.net/manual/ru/datetime.formats.relative.php
      */
-    private function normalize($ttl): int
+    private function setExpires($ttl): void
     {
         //Срок действия cookie истечет с окончанием сессии (при закрытии браузера).
         if ($ttl === 0 || $ttl === false || strtolower((string)$ttl) === 'session') {
-            return 0;
+            $this->expires =  0;
+            return;
         }
 
         // Устанавливаем время жизни на год
@@ -42,12 +43,14 @@ class Expires
         // Если число то прибавляем значение к метке времени timestamp
         // Для установки сессионной куки надо использовать FALSE
         if (is_numeric($ttl)) {
-            return time() + (int)$ttl;
+            $this->expires =  time() + (int)$ttl;
+            return;
         }
 
         if (is_string($ttl)) {
             if (false !== $returnTtl = strtotime($ttl)) {
-                return $returnTtl;
+                $this->expires =  $returnTtl;
+                return;
             }
             throw new Exception(sprintf('strtotime() failed to convert string "%s" to timestamp', $ttl));
         }
