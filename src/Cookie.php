@@ -91,8 +91,8 @@ class Cookie
         }
 
         if ($value !== null) {
-            $expires = $this->getExpires($ttl);
-            $this->options->setExpires($expires);
+            $expires = new Expires($ttl);
+            $this->options->setExpires($expires->getExpires());
         }
 
         return [
@@ -100,37 +100,5 @@ class Cookie
             (string)$value,
             $this->options->getOptions($addedOptions),
         ];
-    }
-
-    /**
-     * @param mixed $ttl
-     * @return int
-     * @throws Exception
-     * @see http://php.net/manual/ru/datetime.formats.relative.php
-     */
-    private function getExpires($ttl): int
-    {
-        //Срок действия cookie истечет с окончанием сессии (при закрытии браузера).
-        if ($ttl === 0 || $ttl === false || strtolower((string)$ttl) === 'session') {
-            return 0;
-        }
-
-        // Устанавливаем время жизни на год
-        if ($ttl === true) {
-            $ttl = 60 * 60 * 24 * 365;
-        }
-
-        // Если число то прибавляем значение к метке времени timestamp
-        // Для установки сессионной куки надо использовать FALSE
-        if (is_numeric($ttl)) {
-            return time() + (int)$ttl;
-        }
-
-        if (is_string($ttl)) {
-            if (false !== $returnTtl = strtotime($ttl)) {
-                return $returnTtl;
-            }
-            throw new Exception(sprintf('strtotime() failed to convert string "%s" to timestamp', $ttl));
-        }
     }
 }
