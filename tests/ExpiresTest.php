@@ -24,12 +24,12 @@ class ExpiresTest extends TestCase
     {
         return [
             [0, 0],
-            [false, 0],
+            [false, -1],
             ['session', 0],
             ['Session', 0],
             ['sessioN', 0],
             ['SeSsiOn', 0],
-            [true, $this->currentTimestamp + 60 * 60 * 24 * 365],
+            [true, 0],
             [10, $this->currentTimestamp + 10],
             [-1, $this->currentTimestamp + -1],
             ['+1 year', $this->currentTimestamp + (60 * 60 * 24 * 365)],
@@ -38,6 +38,11 @@ class ExpiresTest extends TestCase
             ['-1 month', $this->currentTimestamp + (-60 * 60 * 24 * 31)],
             ['1 day', $this->currentTimestamp + (60 * 60 * 24)],
             ['-1 day', $this->currentTimestamp + (-60 * 60 * 24)],
+            [new \DateTime('1970-01-02'), 3600 * 24],
+            [new \DateTimeImmutable('1970-01-05'), 4 * 3600 * 24],
+            [new \DateTimeImmutable('@404'), 404],
+            [(new \DateTimeImmutable('@0'))->modify('1 hour'), 3600],
+            [(new \DateTime('@0'))->modify('1 minute'), 60],
         ];
     }
 
