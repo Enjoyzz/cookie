@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Enjoys\Cookie;
 
-use Enjoys\Http\ServerRequest;
-use Enjoys\Http\ServerRequestInterface;
-
 class Cookie
 {
     /**
