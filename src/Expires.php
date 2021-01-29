@@ -10,7 +10,7 @@ class Expires
      * @var int
      */
     private int $expires = -1;
-    private ?int $currentTimestamp;
+    private int $currentTimestamp;
 
     /**
      * Expires constructor.
@@ -33,15 +33,15 @@ class Expires
      */
     private function setExpires($ttl): void
     {
-        //Срок действия cookie истечет с окончанием сессии (при закрытии браузера).
-        if ($ttl === 0 || $ttl === false || strtolower((string)$ttl) === 'session') {
-            $this->expires =  0;
+        if($ttl instanceof \DateTimeInterface){
+            $this->expires = $ttl->getTimestamp();
             return;
         }
 
-        // Устанавливаем время жизни на год
-        if ($ttl === true) {
-            $ttl = 60 * 60 * 24 * 365;
+        //Срок действия cookie истечет с окончанием сессии (при закрытии браузера).
+        if ($ttl === 0 || $ttl === true || strtolower((string)$ttl) === 'session') {
+            $this->expires =  0;
+            return;
         }
 
         // Если число то прибавляем значение к метке времени timestamp
