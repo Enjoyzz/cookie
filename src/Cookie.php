@@ -43,13 +43,14 @@ class Cookie
      * @param string|null $value
      * @param bool|int|string $ttl
      * @param array<mixed> $addedOptions Ассоциативный массив (array), который может иметь любой из ключей: expires, path, domain, secure, httponly и samesite.
+     * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setcookie.php
      */
-    public function set(string $key, ?string $value, $ttl = true, array $addedOptions = []): void
+    public function set(string $key, ?string $value, $ttl = true, array $addedOptions = []): bool
     {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
-        setcookie(...$setParams);
+        return setcookie(...$setParams);
     }
 
     /**
@@ -58,13 +59,14 @@ class Cookie
      * @param string|null $value
      * @param bool|int|string $ttl
      * @param array<mixed> $addedOptions
+     * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setrawcookie.php
      */
-    public function setRaw(string $key, ?string $value, $ttl = true, array $addedOptions = []): void
+    public function setRaw(string $key, ?string $value, $ttl = true, array $addedOptions = []): bool
     {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
-        setrawcookie(...$setParams);
+        return setrawcookie(...$setParams);
     }
 
     /**
@@ -77,15 +79,15 @@ class Cookie
      */
     private function getSetParams(string $key, ?string $value, $ttl = true, array $addedOptions = []): array
     {
-        if (headers_sent($filename, $linenum)) {
-            throw new Exception(
-                sprintf(
-                    "Cookies are not set. Headers have already been sent to %s in line %s\n",
-                    $filename,
-                    $linenum
-                )
-            );
-        }
+//        if (headers_sent($filename, $linenum)) {
+//            throw new Exception(
+//                sprintf(
+//                    "Cookies are not set. Headers have already been sent to %s in line %s\n",
+//                    $filename,
+//                    $linenum
+//                )
+//            );
+//        }
 
         if ($value !== null) {
             $expires = new Expires($ttl);
@@ -98,4 +100,5 @@ class Cookie
             $this->options->getOptions($addedOptions),
         ];
     }
+
 }
