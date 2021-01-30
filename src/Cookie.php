@@ -42,7 +42,8 @@ class Cookie
      * @param string $key
      * @param string|null $value
      * @param bool|int|string $ttl
-     * @param array<mixed> $addedOptions Ассоциативный массив (array), который может иметь любой из ключей: expires, path, domain, secure, httponly и samesite.
+     * @param array<mixed> $addedOptions Ассоциативный массив (array),
+     * который может иметь любой из ключей: expires, path, domain, secure, httponly и samesite.
      * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setcookie.php
@@ -100,5 +101,4 @@ class Cookie
             $this->options->getOptions($addedOptions),
         ];
     }
-
 }

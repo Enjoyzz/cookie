@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Enjoys\Cookie;
-
 
 class Expires
 {
@@ -11,8 +11,7 @@ class Expires
      */
     private int $expires = -1;
     private int $currentTimestamp;
-
-    /**
+/**
      * Expires constructor.
      * @param mixed $ttl
      * @param int|null $currentTimestamp
@@ -22,7 +21,6 @@ class Expires
     {
         $this->currentTimestamp = $currentTimestamp ?? time();
         $this->setExpires($ttl);
-
     }
 
     /**
@@ -33,7 +31,7 @@ class Expires
      */
     private function setExpires($ttl): void
     {
-        if($ttl instanceof \DateTimeInterface){
+        if ($ttl instanceof \DateTimeInterface) {
             $this->expires = $ttl->getTimestamp();
             return;
         }

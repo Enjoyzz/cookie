@@ -23,7 +23,6 @@ class Options
     ];
 
     private const ALLOWED_OPTIONS = [
-       // 'expires',
         'path',
         'domain',
         'secure',
