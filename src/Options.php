@@ -2,8 +2,8 @@
 
 namespace Enjoys\Cookie;
 
-use Enjoys\Http\ServerRequest;
-use Enjoys\Http\ServerRequestInterface;
+use Enjoys\ServerRequestWrapper;
+use HttpSoft\Message\ServerRequest;
 
 /**
  * Class Options
@@ -30,18 +30,18 @@ class Options
         'samesite'
     ];
 
-    public function __construct(ServerRequestInterface $serverRequest = null)
+    public function __construct(ServerRequestWrapper $request = null)
     {
-        $serverRequest ??= new ServerRequest();
+        $request ??= new ServerRequestWrapper(new ServerRequest());
 
-        $domain = (($serverRequest->server('SERVER_NAME') != 'localhost') ? preg_replace(
+        $domain = (($request->getServerData('SERVER_NAME') != 'localhost') ? preg_replace(
             '#^www\.#',
             '',
-            strtolower((string)$serverRequest->server('SERVER_NAME'))
+            strtolower((string)$request->getServerData('SERVER_NAME'))
         ) : false) ?? false;
 
         $this->setDomain($domain);
-        $this->setSecure(($serverRequest->server('HTTPS') == 'on'));
+        $this->setSecure(($request->getServerData('HTTPS') == 'on'));
     }
 
     /**
