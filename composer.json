@@ -10,8 +10,7 @@
     ],
     "require": {
         "php": ">= 7.4",
-        "enjoys/server-request-wrapper": "^1.0",
-        "httpsoft/http-server-request": "^1.0"
+        "httpsoft/http-message": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -28,9 +27,11 @@
         "phpcs": "phpcs --standard=PSR12 src/",
         "phpstan": "phpstan analyse -l 8  src/",
         "psalm": "psalm --show-info=true src/",
-        "phpmetrics": "phpmetrics --report-html=build/phpmetrics src/"
+        "phpmetrics": "phpmetrics --report-html=build/phpmetrics src/",
+        "test": "phpunit tests"
     },
     "require-dev": {
+        "httpsoft/http-server-request": "^1.0",
         "phpunit/phpunit": "^9.5",
         "vimeo/psalm": "^4.7",
         "phpstan/phpstan": "^1.5",
