@@ -35,15 +35,17 @@ class Options
     public function __construct(ServerRequestInterface $request = null)
     {
         $request ??= ServerRequestCreator::createFromGlobals();
+        $SERVER_NAME = $request->getServerParams()['SERVER_NAME'] ?? null;
+        $HTTPS = $request->getServerParams()['HTTPS'] ?? null;
 
-        $domain = ((($request->getServerParams()['SERVER_NAME']) != 'localhost') ? preg_replace(
+        $domain = (($SERVER_NAME != 'localhost') ? preg_replace(
                 '#^www\.#',
                 '',
-                strtolower((string)$request->getServerParams()['SERVER_NAME'])
+                strtolower((string)$SERVER_NAME)
             ) : false) ?? false;
 
         $this->setDomain($domain);
-        $this->setSecure(($request->getServerParams()['HTTPS'] == 'on'));
+        $this->setSecure(($HTTPS == 'on'));
     }
 
     /**
