@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Enjoys\Cookie;
 
+/**
+ * @package Enjoys\Cookie
+ */
 class Cookie
 {
     /**

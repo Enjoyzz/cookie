@@ -37,10 +37,10 @@ class Options
         $request ??= ServerRequestCreator::createFromGlobals();
 
         $domain = ((($request->getServerParams()['SERVER_NAME']) != 'localhost') ? preg_replace(
-            '#^www\.#',
-            '',
-            strtolower((string)$request->getServerParams()['SERVER_NAME'])
-        ) : false) ?? false;
+                '#^www\.#',
+                '',
+                strtolower((string)$request->getServerParams()['SERVER_NAME'])
+            ) : false) ?? false;
 
         $this->setDomain($domain);
         $this->setSecure(($request->getServerParams()['HTTPS'] == 'on'));
