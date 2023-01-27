@@ -38,6 +38,9 @@ class Cookie
     public function delete(string $name): void
     {
         $this->set($name, '', '-1 day');
+        $cookie = $this->options->getRequest()->getCookieParams();
+        unset($cookie[$name]);
+        $this->options->setRequest($this->options->getRequest()->withCookieParams($cookie));
     }
 
 
@@ -57,7 +60,7 @@ class Cookie
         if (setcookie(...$setParams)) {
             $this->options->setRequest(
                 $this->options->getRequest()->withCookieParams([
-                    $key => $value
+                    $key => urlencode($value)
                 ])
             );
             return true;
@@ -78,7 +81,8 @@ class Cookie
     public function setRaw(string $key, ?string $value, $ttl = true, array $addedOptions = []): bool
     {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
-        if (setrawcookie(...$setParams)){
+
+        if (setrawcookie(...$setParams)) {
             $this->options->setRequest(
                 $this->options->getRequest()->withCookieParams([
                     $key => $value
@@ -86,6 +90,7 @@ class Cookie
             );
             return true;
         }
+
 
         return false;
     }
