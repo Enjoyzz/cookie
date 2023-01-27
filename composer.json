@@ -23,11 +23,7 @@
         }
     },
     "scripts": {
-        "phpcs-fix": "phpcbf --standard=PSR12 src/",
-        "phpcs": "phpcs --standard=PSR12 src/",
-        "phpstan": "phpstan analyse -l 8  src/",
         "psalm": "psalm --show-info=true src/",
-        "phpmetrics": "phpmetrics --report-html=build/phpmetrics src/",
         "test": "phpunit tests"
     },
     "require-dev": {
