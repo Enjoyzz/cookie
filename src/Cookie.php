@@ -19,15 +19,15 @@ class Cookie
         $this->options = $options;
     }
 
-    public static function get(string $key): ?string
+    public function get(string $key): ?string
     {
-        return (self::has($key)) ? $_COOKIE[$key] : null;
+        return $this->options->getRequest()->getCookieParams()[$key] ?? null;
     }
 
 
-    public static function has(string $key): bool
+    public function has(string $key): bool
     {
-        return array_key_exists($key, $_COOKIE);
+        return array_key_exists($key, $this->options->getRequest()->getCookieParams());
     }
 
 
@@ -54,7 +54,15 @@ class Cookie
     public function set(string $key, ?string $value, $ttl = true, array $addedOptions = []): bool
     {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
-        return setcookie(...$setParams);
+        if (setcookie(...$setParams)) {
+            $this->options->setRequest(
+                $this->options->getRequest()->withCookieParams([
+                    $key => $value
+                ])
+            );
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -70,7 +78,16 @@ class Cookie
     public function setRaw(string $key, ?string $value, $ttl = true, array $addedOptions = []): bool
     {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
-        return setrawcookie(...$setParams);
+        if (setrawcookie(...$setParams)){
+            $this->options->setRequest(
+                $this->options->getRequest()->withCookieParams([
+                    $key => $value
+                ])
+            );
+            return true;
+        }
+
+        return false;
     }
 
     /**

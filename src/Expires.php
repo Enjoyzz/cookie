@@ -46,7 +46,7 @@ class Expires
             return;
         }
 
-        // Если число то прибавляем значение к метке времени timestamp
+        // Если число, то прибавляем значение к метке времени timestamp
         // Для установки сессионной куки надо использовать FALSE
         if (is_numeric($ttl)) {
             $this->expires = $this->currentTimestamp + (int)$ttl;

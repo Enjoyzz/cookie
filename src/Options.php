@@ -32,11 +32,10 @@ class Options
         'samesite'
     ];
 
-    public function __construct(ServerRequestInterface $request = null)
+    public function __construct(private ServerRequestInterface $request)
     {
-        $request ??= ServerRequestCreator::createFromGlobals();
-        $SERVER_NAME = $request->getServerParams()['SERVER_NAME'] ?? null;
-        $HTTPS = $request->getServerParams()['HTTPS'] ?? null;
+        $SERVER_NAME = $this->request->getServerParams()['SERVER_NAME'] ?? null;
+        $HTTPS = $this->request->getServerParams()['HTTPS'] ?? null;
 
         $domain = (($SERVER_NAME != 'localhost') ? preg_replace(
                 '#^www\.#',
@@ -110,5 +109,17 @@ class Options
     public function setSameSite(string $sameSite): void
     {
         $this->options['samesite'] = $sameSite;
+    }
+
+
+    public function getRequest(): ServerRequestInterface
+    {
+        return $this->request;
+    }
+
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
     }
 }
