@@ -4,36 +4,25 @@ declare(strict_types=1);
 
 namespace Enjoys\Cookie;
 
-/**
- * @package Enjoys\Cookie
- */
 class Expires
 {
-    /**
-     * @var int
-     */
     private int $expires = -1;
     private int $currentTimestamp;
 
     /**
-     * Expires constructor.
-     * @param mixed $ttl
-     * @param int|null $currentTimestamp
      * @throws Exception
      */
-    public function __construct($ttl, int $currentTimestamp = null)
+    public function __construct(bool|int|string|\DateTimeInterface $ttl, int $currentTimestamp = null)
     {
         $this->currentTimestamp = $currentTimestamp ?? time();
         $this->setExpires($ttl);
     }
 
     /**
-     * @param mixed $ttl
-     * @return void
      * @throws Exception
      * @see http://php.net/manual/ru/datetime.formats.relative.php
      */
-    private function setExpires($ttl): void
+    private function setExpires(bool|int|string|\DateTimeInterface $ttl): void
     {
         if ($ttl instanceof \DateTimeInterface) {
             $this->expires = $ttl->getTimestamp();
@@ -62,9 +51,7 @@ class Expires
         }
     }
 
-    /**
-     * @return int
-     */
+
     public function getExpires(): int
     {
         return $this->expires;
