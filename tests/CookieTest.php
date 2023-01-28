@@ -22,7 +22,7 @@ class CookieTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function test1()
+    public function testSetCookie()
     {
         $cookie = new Cookie(new Options($this->request));
 

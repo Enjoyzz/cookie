@@ -24,6 +24,8 @@ class OptionsTest extends TestCase
         $this->assertSame(true, $options->getOptions()['httponly']);
     }
 
+
+
     public function testSetDomain()
     {
         $options = new Options($this->request);
@@ -31,6 +33,33 @@ class OptionsTest extends TestCase
         $this->assertSame(false, $options->getOptions()['domain']);
         $options->setDomain('domain.com');
         $this->assertSame('domain.com', $options->getOptions()['domain']);
+    }
+
+    public function testSetDomainAfterInitializeWithServerNameLocalhost()
+    {
+        $request = ServerRequestCreator::createFromGlobals(server: [
+            'SERVER_NAME' => 'localhost'
+        ]);
+        $options = new Options($request);
+        $this->assertSame(false, $options->getOptions()['domain']);
+    }
+
+    public function testSetDomainAfterInitializeWithServerNameNotLocalhost()
+    {
+        $request = ServerRequestCreator::createFromGlobals(server: [
+            'SERVER_NAME' => 'Server.localhost'
+        ]);
+        $options = new Options($request);
+        $this->assertSame('server.localhost', $options->getOptions()['domain']);
+    }
+
+    public function testSetDomainAfterInitializeWithServerNameIsNull()
+    {
+        $request = ServerRequestCreator::createFromGlobals(server: [
+            'SERVER_NAME' => null
+        ]);
+        $options = new Options($request);
+        $this->assertSame('', $options->getOptions()['domain']);
     }
 
     public function testSetSameSite()
@@ -54,6 +83,15 @@ class OptionsTest extends TestCase
         $options = new Options($this->request);
         $this->assertSame(false, $options->getOptions()['secure']);
         $options->setSecure(true);
+        $this->assertSame(true, $options->getOptions()['secure']);
+    }
+
+    public function testSetSecureAfterInitialize()
+    {
+        $request = ServerRequestCreator::createFromGlobals(server: [
+            'HTTPS' => 'on'
+        ]);
+        $options = new Options($request);
         $this->assertSame(true, $options->getOptions()['secure']);
     }
 
