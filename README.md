@@ -8,7 +8,8 @@
 ```php
 use Enjoys\Cookie\Options;
 
-$cookieOptions = new Options();
+/** @var \Psr\Http\Message\ServerRequestInterface $request */
+$cookieOptions = new Options($request);
 $cookieOptions->setDomain('example.com'); //default: false (localhost)
 $cookieOptions->setPath('/'); //default: '' (string empty)
 $cookieOptions->setSecure(true); //default: false
@@ -26,7 +27,8 @@ $cookie = new Cookie($cookieOptions);
 $cookie->set('key', 'value<>', $ttl = true, $options = []);
 $cookie->setRaw('key', 'value<>');
 $cookie->delete('key');
-Cookie::get('key');
+$cookie->get('key');
+$cookie->has('key');
 ```
 
 ## TTL (Time to left)

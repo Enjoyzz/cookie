@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Enjoys\Cookie;
 
-use HttpSoft\ServerRequest\ServerRequestCreator;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * Class Options
- * @package Enjoys\Cookie
- */
 class Options
 {
+
     /**
-     * @var array<mixed>
+     * @var array<string, int|string|bool>
      */
     private array $options = [
         'expires' => -1,
@@ -32,25 +28,27 @@ class Options
         'samesite'
     ];
 
-    public function __construct(ServerRequestInterface $request = null)
+    public function __construct(private ServerRequestInterface $request)
     {
-        $request ??= ServerRequestCreator::createFromGlobals();
-        $SERVER_NAME = $request->getServerParams()['SERVER_NAME'] ?? null;
-        $HTTPS = $request->getServerParams()['HTTPS'] ?? null;
+        /** @var null|string $SERVER_NAME */
+        $SERVER_NAME = $this->request->getServerParams()['SERVER_NAME'] ?? null;
+        /** @var null|string $HTTPS */
+        $HTTPS = $this->request->getServerParams()['HTTPS'] ?? null;
 
-        $domain = (($SERVER_NAME != 'localhost') ? preg_replace(
-                '#^www\.#',
-                '',
-                strtolower((string)$SERVER_NAME)
-            ) : false) ?? false;
+        $domain = (($SERVER_NAME !== 'localhost') ? preg_replace(
+            '#^www\.#',
+            '',
+            strtolower((string)$SERVER_NAME)
+        ) : false) ?? false;
 
         $this->setDomain($domain);
-        $this->setSecure(($HTTPS == 'on'));
+        $this->setSecure(($HTTPS === 'on'));
     }
 
+
     /**
-     * @param array<mixed> $addedOptions
-     * @return array<mixed>
+     * @param array<string, int|string|bool> $addedOptions
+     * @return array<string, int|string|bool>
      */
     public function getOptions(array $addedOptions = []): array
     {
@@ -63,52 +61,45 @@ class Options
         return $options;
     }
 
-    /**
-     * @param int $expires
-     */
     public function setExpires(int $expires): void
     {
         $this->options['expires'] = $expires;
     }
 
-    /**
-     * @param false|string $domain
-     */
-    public function setDomain($domain): void
+    public function setDomain(bool|string $domain): void
     {
         $this->options['domain'] = $domain;
     }
 
 
-    /**
-     * @param string $path
-     */
     public function setPath(string $path): void
     {
         $this->options['path'] = $path;
     }
 
-    /**
-     * @param bool $httpOnly
-     */
     public function setHttponly(bool $httpOnly): void
     {
         $this->options['httponly'] = $httpOnly;
     }
 
-    /**
-     * @param bool $secure
-     */
     public function setSecure(bool $secure): void
     {
         $this->options['secure'] = $secure;
     }
 
-    /**
-     * @param string $sameSite
-     */
     public function setSameSite(string $sameSite): void
     {
         $this->options['samesite'] = $sameSite;
+    }
+
+
+    public function getRequest(): ServerRequestInterface
+    {
+        return $this->request;
+    }
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
     }
 }

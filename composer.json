@@ -9,9 +9,8 @@
         }
     ],
     "require": {
-        "php": ">= 7.4",
-        "httpsoft/http-message": "^1.0",
-        "httpsoft/http-server-request": "^1.0"
+        "php": ">= 8.0",
+        "psr/http-message": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -24,20 +23,20 @@
         }
     },
     "scripts": {
-        "phpcs-fix": "phpcbf --standard=PSR12 src/",
-        "phpcs": "phpcs --standard=PSR12 src/",
-        "phpstan": "phpstan analyse -l 8  src/",
         "psalm": "psalm --show-info=true src/",
-        "phpmetrics": "phpmetrics --report-html=build/phpmetrics src/",
+        "infection": "vendor/bin/infection -j2",
         "test": "phpunit tests"
     },
     "require-dev": {
         "httpsoft/http-server-request": "^1.0",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.7",
-        "phpstan/phpstan": "^1.5",
-        "phpmetrics/phpmetrics": "^2.8",
-        "squizlabs/php_codesniffer": "^3.6",
-        "symfony/var-dumper": "^v5.3"
+        "vimeo/psalm": "^5.6",
+        "symfony/var-dumper": "^v5.3",
+        "infection/infection": "^0.26.18"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     }
 }

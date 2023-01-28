@@ -32,6 +32,7 @@ class ExpiresTest extends TestCase
             [true, 0],
             [10, $this->currentTimestamp + 10],
             [-1, $this->currentTimestamp + -1],
+            ['10', $this->currentTimestamp + 10],
             ['+1 year', $this->currentTimestamp + (60 * 60 * 24 * 365)],
             ['-1 year', $this->currentTimestamp + (-60 * 60 * 24 * 365)],
             ['+1 month', $this->currentTimestamp + (60 * 60 * 24 * 31)],
