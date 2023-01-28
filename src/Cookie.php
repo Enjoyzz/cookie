@@ -6,14 +6,8 @@ namespace Enjoys\Cookie;
 
 class Cookie
 {
-    /**
-     * @var Options
-     */
-    private Options $options;
-
-    public function __construct(Options $options)
+    public function __construct(private Options $options)
     {
-        $this->options = $options;
     }
 
     public function get(string $key = null): null|array|string
@@ -49,11 +43,7 @@ class Cookie
 
 
     /**
-     * @param string $key
-     * @param string $value
-     * @param bool|int|string|\DateTimeInterface $ttl
      * @param array<string, int|string|bool> $addedOptions
-     * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setcookie.php
      */
@@ -89,11 +79,7 @@ class Cookie
 
     /**
      * Отправляет cookie без URL-кодирования значения
-     * @param string $key
-     * @param string $value
-     * @param bool|int|string|\DateTimeInterface $ttl
      * @param array<string, int|string|bool> $addedOptions
-     * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setrawcookie.php
      */
@@ -130,9 +116,6 @@ class Cookie
     }
 
     /**
-     * @param string $key
-     * @param string $value
-     * @param bool|int|string|\DateTimeInterface $ttl
      * @param array<string, int|string|bool> $addedOptions
      * @return array{string, string, array<string, int|string|bool>}
      * @throws Exception

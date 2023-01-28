@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Enjoys\Cookie;
 
-use HttpSoft\ServerRequest\ServerRequestCreator;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Options
@@ -37,10 +36,10 @@ class Options
         $HTTPS = $this->request->getServerParams()['HTTPS'] ?? null;
 
         $domain = (($SERVER_NAME !== 'localhost') ? preg_replace(
-                '#^www\.#',
-                '',
-                strtolower((string)$SERVER_NAME)
-            ) : false) ?? false;
+            '#^www\.#',
+            '',
+            strtolower((string)$SERVER_NAME)
+        ) : false) ?? false;
 
         $this->setDomain($domain);
         $this->setSecure(($HTTPS === 'on'));
