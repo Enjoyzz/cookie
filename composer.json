@@ -30,6 +30,12 @@
         "httpsoft/http-server-request": "^1.0",
         "phpunit/phpunit": "^9.5",
         "vimeo/psalm": "^5.6",
-        "symfony/var-dumper": "^v5.3"
+        "symfony/var-dumper": "^v5.3",
+        "infection/infection": "^0.26.18"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     }
 }

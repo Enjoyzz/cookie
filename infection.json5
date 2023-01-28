@@ -1,0 +1,20 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "logs/infection/infection.log",
+        "html": "logs/infection/infection.html",
+        "summary": "logs/infection/summary.log",
+        "stryker": {
+            "badge":  "master"
+        }
+    },
+    "tmpDir": ".tmp",
+    "mutators": {
+        "@default": true
+    }
+}
