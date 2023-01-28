@@ -16,10 +16,14 @@ class Cookie
         $this->options = $options;
     }
 
-    public function get(string $key): ?string
+    public function get(string $key = null): null|array|string
     {
         /** @var string[] $cookie */
         $cookie = $this->options->getRequest()->getCookieParams();
+        if ($key === null) {
+            return $cookie;
+        }
+
         return $cookie[$key] ?? null;
     }
 
@@ -35,17 +39,18 @@ class Cookie
      */
     public function delete(string $name): void
     {
-        $this->set($name, '', '-1 day');
-        /** @var string[] $cookie */
-        $cookie = $this->options->getRequest()->getCookieParams();
-        unset($cookie[$name]);
-        $this->options->setRequest($this->options->getRequest()->withCookieParams($cookie));
+        if ($this->set($name, '', '-1 day')) {
+            /** @var array<string, string> $cookie */
+            $cookie = $this->options->getRequest()->getCookieParams();
+            unset($cookie[$name]);
+            $this->options->setRequest($this->options->getRequest()->withCookieParams($cookie));
+        }
     }
 
 
     /**
      * @param string $key
-     * @param string|null $value
+     * @param string $value
      * @param bool|int|string|\DateTimeInterface $ttl
      * @param array<string, int|string|bool> $addedOptions
      * @return bool
@@ -54,7 +59,7 @@ class Cookie
      */
     public function set(
         string $key,
-        ?string $value,
+        string $value,
         bool|int|string|\DateTimeInterface $ttl = true,
         array $addedOptions = []
     ): bool {
@@ -64,10 +69,18 @@ class Cookie
          * @psalm-suppress InvalidArgument, MixedArgument
          */
         if (setcookie(...$setParams)) {
+            if ($setParams[2]['expires'] < 0) {
+                return true;
+            }
             $this->options->setRequest(
-                $this->options->getRequest()->withCookieParams([
-                    $key => urlencode((string)$value)
-                ])
+                $this->options->getRequest()->withCookieParams(
+                    array_merge(
+                        $this->options->getRequest()->getCookieParams(),
+                        [
+                            $key => urlencode($value)
+                        ]
+                    )
+                )
             );
             return true;
         }
@@ -77,7 +90,7 @@ class Cookie
     /**
      * Отправляет cookie без URL-кодирования значения
      * @param string $key
-     * @param string|null $value
+     * @param string $value
      * @param bool|int|string|\DateTimeInterface $ttl
      * @param array<string, int|string|bool> $addedOptions
      * @return bool
@@ -86,7 +99,7 @@ class Cookie
      */
     public function setRaw(
         string $key,
-        ?string $value,
+        string $value,
         bool|int|string|\DateTimeInterface $ttl = true,
         array $addedOptions = []
     ): bool {
@@ -96,10 +109,18 @@ class Cookie
          * @psalm-suppress InvalidArgument, MixedArgument
          */
         if (setrawcookie(...$setParams)) {
+            if ($setParams[2]['expires'] < 0) {
+                return true;
+            }
             $this->options->setRequest(
-                $this->options->getRequest()->withCookieParams([
-                    $key => $value
-                ])
+                $this->options->getRequest()->withCookieParams(
+                    array_merge(
+                        $this->options->getRequest()->getCookieParams(),
+                        [
+                            $key => $value
+                        ]
+                    )
+                )
             );
             return true;
         }
@@ -110,7 +131,7 @@ class Cookie
 
     /**
      * @param string $key
-     * @param string|null $value
+     * @param string $value
      * @param bool|int|string|\DateTimeInterface $ttl
      * @param array<string, int|string|bool> $addedOptions
      * @return array{string, string, array<string, int|string|bool>}
@@ -118,19 +139,13 @@ class Cookie
      */
     private function getSetParams(
         string $key,
-        ?string $value,
-        bool|int|string|\DateTimeInterface $ttl = true,
+        string $value,
+        bool|int|string|\DateTimeInterface $ttl,
         array $addedOptions = []
     ): array {
-        if ($value !== null) {
-            $expires = new Expires($ttl);
-            $this->options->setExpires($expires->getExpires());
-        }
+        $expires = new Expires($ttl);
+        $this->options->setExpires($expires->getExpires());
 
-        return [
-            $key,
-            (string)$value,
-            $this->options->getOptions($addedOptions),
-        ];
+        return [$key, $value, $this->options->getOptions($addedOptions)];
     }
 }

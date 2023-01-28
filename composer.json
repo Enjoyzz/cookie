@@ -24,6 +24,7 @@
     },
     "scripts": {
         "psalm": "psalm --show-info=true src/",
+        "infection": "vendor/bin/infection -j2",
         "test": "phpunit tests"
     },
     "require-dev": {
