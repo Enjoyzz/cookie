@@ -10,6 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 class Options
 {
 
+    /**
+     * @var array<string, int|string|bool>
+     */
     private array $options = [
         'expires' => -1,
         'path' => '',
@@ -28,20 +31,26 @@ class Options
 
     public function __construct(private ServerRequestInterface $request)
     {
+        /** @var null|string $SERVER_NAME */
         $SERVER_NAME = $this->request->getServerParams()['SERVER_NAME'] ?? null;
+        /** @var null|string $HTTPS */
         $HTTPS = $this->request->getServerParams()['HTTPS'] ?? null;
 
-        $domain = (($SERVER_NAME != 'localhost') ? preg_replace(
+        $domain = (($SERVER_NAME !== 'localhost') ? preg_replace(
                 '#^www\.#',
                 '',
                 strtolower((string)$SERVER_NAME)
             ) : false) ?? false;
 
         $this->setDomain($domain);
-        $this->setSecure(($HTTPS == 'on'));
+        $this->setSecure(($HTTPS === 'on'));
     }
 
 
+    /**
+     * @param array<string, int|string|bool> $addedOptions
+     * @return array<string, int|string|bool>
+     */
     public function getOptions(array $addedOptions = []): array
     {
         $options = $this->options;

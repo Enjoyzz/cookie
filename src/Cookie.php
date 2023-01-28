@@ -18,7 +18,9 @@ class Cookie
 
     public function get(string $key): ?string
     {
-        return $this->options->getRequest()->getCookieParams()[$key] ?? null;
+        /** @var string[] $cookie */
+        $cookie = $this->options->getRequest()->getCookieParams();
+        return $cookie[$key] ?? null;
     }
 
 
@@ -34,6 +36,7 @@ class Cookie
     public function delete(string $name): void
     {
         $this->set($name, '', '-1 day');
+        /** @var string[] $cookie */
         $cookie = $this->options->getRequest()->getCookieParams();
         unset($cookie[$name]);
         $this->options->setRequest($this->options->getRequest()->withCookieParams($cookie));
@@ -41,6 +44,11 @@ class Cookie
 
 
     /**
+     * @param string $key
+     * @param string|null $value
+     * @param bool|int|string|\DateTimeInterface $ttl
+     * @param array<string, int|string|bool> $addedOptions
+     * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setcookie.php
      */
@@ -51,10 +59,14 @@ class Cookie
         array $addedOptions = []
     ): bool {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
+
+        /**
+         * @psalm-suppress InvalidArgument, MixedArgument
+         */
         if (setcookie(...$setParams)) {
             $this->options->setRequest(
                 $this->options->getRequest()->withCookieParams([
-                    $key => urlencode($value)
+                    $key => urlencode((string)$value)
                 ])
             );
             return true;
@@ -64,6 +76,11 @@ class Cookie
 
     /**
      * Отправляет cookie без URL-кодирования значения
+     * @param string $key
+     * @param string|null $value
+     * @param bool|int|string|\DateTimeInterface $ttl
+     * @param array<string, int|string|bool> $addedOptions
+     * @return bool
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setrawcookie.php
      */
@@ -75,6 +92,9 @@ class Cookie
     ): bool {
         $setParams = $this->getSetParams($key, $value, $ttl, $addedOptions);
 
+        /**
+         * @psalm-suppress InvalidArgument, MixedArgument
+         */
         if (setrawcookie(...$setParams)) {
             $this->options->setRequest(
                 $this->options->getRequest()->withCookieParams([
@@ -89,6 +109,11 @@ class Cookie
     }
 
     /**
+     * @param string $key
+     * @param string|null $value
+     * @param bool|int|string|\DateTimeInterface $ttl
+     * @param array<string, int|string|bool> $addedOptions
+     * @return array{string, string, array<string, int|string|bool>}
      * @throws Exception
      */
     private function getSetParams(
