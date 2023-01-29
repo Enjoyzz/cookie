@@ -1,3 +1,6 @@
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FEnjoyzz%2Fcookie%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/Enjoyzz/cookie/master)
+[![tests](https://github.com/Enjoyzz/cookie/actions/workflows/test.yml/badge.svg)](https://github.com/Enjoyzz/cookie/actions/workflows/test.yml)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Enjoyzz/cookie/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Enjoyzz/cookie/?branch=master)
 # Cookie Wrapper
 
 ## Example
