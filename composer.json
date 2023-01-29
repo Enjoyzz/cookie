@@ -1,5 +1,6 @@
 {
     "name": "enjoys/cookie",
+    "description": "Cookie manager",
     "type": "library",
     "license": "MIT",
     "authors": [
