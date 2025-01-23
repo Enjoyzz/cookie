@@ -31,7 +31,7 @@
     "require-dev": {
         "httpsoft/http-server-request": "^1.0 | ^2.0",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^5.6",
+        "phpstan/phpstan": "^2.1",
         "symfony/var-dumper": "^v5.3",
         "infection/infection": "^0.26.18"
     },
