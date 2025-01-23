@@ -29,8 +29,8 @@ class OptionsTest extends TestCase
     public function testSetDomain()
     {
         $options = new Options($this->request);
-        $options->setDomain(false);
-        $this->assertSame(false, $options->getOptions()['domain']);
+        $options->setDomain('');
+        $this->assertSame('', $options->getOptions()['domain']);
         $options->setDomain('domain.com');
         $this->assertSame('domain.com', $options->getOptions()['domain']);
     }
@@ -41,7 +41,7 @@ class OptionsTest extends TestCase
             'SERVER_NAME' => 'localhost'
         ]);
         $options = new Options($request);
-        $this->assertSame(false, $options->getOptions()['domain']);
+        $this->assertSame('', $options->getOptions()['domain']);
     }
 
     public function testSetDomainAfterInitializeWithServerNameNotLocalhost()
