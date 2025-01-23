@@ -10,6 +10,11 @@ class Cookie
     {
     }
 
+
+    /**
+     * @param string|null $key
+     * @return array<string,string>|string|null
+     */
     public function get(string $key = null): null|array|string
     {
         /** @var string[] $cookie */
@@ -43,7 +48,7 @@ class Cookie
 
 
     /**
-     * @param array<string, int|string|bool> $addedOptions
+     * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setcookie.php
      */
@@ -79,7 +84,7 @@ class Cookie
 
     /**
      * Отправляет cookie без URL-кодирования значения
-     * @param array<string, int|string|bool> $addedOptions
+     * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
      * @throws Exception
      * @see https://www.php.net/manual/ru/function.setrawcookie.php
      */
@@ -116,8 +121,8 @@ class Cookie
     }
 
     /**
-     * @param array<string, int|string|bool> $addedOptions
-     * @return array{string, string, array<string, int|string|bool>}
+     * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
+     * @return array{string, string, array{expires: int, path: string, domain: string, secure: bool, httponly: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'}}
      * @throws Exception
      */
     private function getSetParams(

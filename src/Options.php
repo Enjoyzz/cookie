@@ -10,12 +10,12 @@ class Options
 {
 
     /**
-     * @var array<string, int|string|bool>
+     * @var array{expires: int, path: string, domain: string, secure: bool, httponly: bool}
      */
     private array $options = [
         'expires' => -1,
         'path' => '',
-        'domain' => false,
+        'domain' => '',
         'secure' => false,
         'httponly' => false,
     ];
@@ -39,7 +39,7 @@ class Options
             '#^www\.#',
             '',
             strtolower((string)$SERVER_NAME)
-        ) : false) ?? false;
+        ) : '') ?? '';
 
         $this->setDomain($domain);
         $this->setSecure(($HTTPS === 'on'));
@@ -47,8 +47,8 @@ class Options
 
 
     /**
-     * @param array<string, int|string|bool> $addedOptions
-     * @return array<string, int|string|bool>
+     * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
+     * @return array{expires: int, path: string, domain: string, secure: bool, httponly: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'}
      */
     public function getOptions(array $addedOptions = []): array
     {
@@ -66,7 +66,7 @@ class Options
         $this->options['expires'] = $expires;
     }
 
-    public function setDomain(bool|string $domain): void
+    public function setDomain(string $domain): void
     {
         $this->options['domain'] = $domain;
     }

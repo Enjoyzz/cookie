@@ -25,6 +25,7 @@
     },
     "scripts": {
         "psalm": "psalm --show-info=true src/",
+        "phpstan": "vendor/bin/phpstan analyse",
         "infection": "vendor/bin/infection -j2",
         "test": "phpunit tests"
     },

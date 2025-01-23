@@ -6,3 +6,5 @@
 /.phpunit.cache/
 /logs/
 /.tmp/
+/phpstan.neon
+/.phpstan.cache/
