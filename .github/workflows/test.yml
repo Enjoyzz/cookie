@@ -58,6 +58,9 @@ jobs:
       - name: Run tests with phpunit
         run: vendor/bin/phpunit --colors=always
 
-      - name: Run psalm
-        run: composer run-script psalm
+#      - name: Run psalm
+#        run: composer run-script psalm
+
+      - name: Run phpstan
+        run: composer run-script phpstan
 
