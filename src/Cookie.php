@@ -34,7 +34,7 @@ class Cookie
 
 
     /**
-     * @throws Exception
+     * @throws NotCorrectTtlString
      */
     public function delete(string $name): void
     {
@@ -49,7 +49,7 @@ class Cookie
 
     /**
      * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
-     * @throws Exception
+     * @throws NotCorrectTtlString
      * @see https://www.php.net/manual/ru/function.setcookie.php
      */
     public function set(
@@ -85,7 +85,7 @@ class Cookie
     /**
      * Отправляет cookie без URL-кодирования значения
      * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
-     * @throws Exception
+     * @throws NotCorrectTtlString
      * @see https://www.php.net/manual/ru/function.setrawcookie.php
      */
     public function setRaw(
@@ -123,7 +123,7 @@ class Cookie
     /**
      * @param array{path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'} $addedOptions
      * @return array{string, string, array{expires: int, path: string, domain: string, secure: bool, httponly: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict'}}
-     * @throws Exception
+     * @throws NotCorrectTtlString
      */
     private function getSetParams(
         string $key,

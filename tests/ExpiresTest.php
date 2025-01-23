@@ -2,7 +2,7 @@
 
 namespace Tests\Enjoys\Cookie;
 
-use Enjoys\Cookie\Exception;
+use Enjoys\Cookie\NotCorrectTtlString;
 use Enjoys\Cookie\Expires;
 use PHPUnit\Framework\TestCase;
 
@@ -49,7 +49,7 @@ class ExpiresTest extends TestCase
 
     public function testException()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(NotCorrectTtlString::class);
         new Expires('invalid string');
     }
 }

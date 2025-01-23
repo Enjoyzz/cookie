@@ -10,7 +10,7 @@ class Expires
     private int $currentTimestamp;
 
     /**
-     * @throws Exception
+     * @throws NotCorrectTtlString
      */
     public function __construct(bool|int|string|\DateTimeInterface $ttl, ?int $currentTimestamp = null)
     {
@@ -19,7 +19,7 @@ class Expires
     }
 
     /**
-     * @throws Exception
+     * @throws NotCorrectTtlString
      * @see http://php.net/manual/ru/datetime.formats.relative.php
      */
     private function setExpires(bool|int|string|\DateTimeInterface $ttl): void
@@ -47,7 +47,7 @@ class Expires
                 $this->expires = $returnTtl;
                 return;
             }
-            throw new Exception(sprintf('strtotime() failed to convert string "%s" to timestamp', $ttl));
+            throw new NotCorrectTtlString($ttl);
         }
     }
 
