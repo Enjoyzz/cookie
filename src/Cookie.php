@@ -15,7 +15,7 @@ class Cookie
      * @param string|null $key
      * @return array<string,string>|string|null
      */
-    public function get(string $key = null): null|array|string
+    public function get(?string $key = null): null|array|string
     {
         /** @var string[] $cookie */
         $cookie = $this->options->getRequest()->getCookieParams();

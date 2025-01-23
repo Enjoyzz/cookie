@@ -12,7 +12,7 @@ class Expires
     /**
      * @throws Exception
      */
-    public function __construct(bool|int|string|\DateTimeInterface $ttl, int $currentTimestamp = null)
+    public function __construct(bool|int|string|\DateTimeInterface $ttl, ?int $currentTimestamp = null)
     {
         $this->currentTimestamp = $currentTimestamp ?? time();
         $this->setExpires($ttl);
